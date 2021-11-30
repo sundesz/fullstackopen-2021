@@ -1,5 +1,5 @@
 import React from 'react'
-import Info from './Info'
+import StatisticLine from './StatisticLine'
 
 const Statistics = ({ good, neutral, bad }) => {
   if (good === 0 && neutral === 0 && bad === 0) {
@@ -12,12 +12,12 @@ const Statistics = ({ good, neutral, bad }) => {
 
   return (
     <>
-      <Info name='good' value={good} />
-      <Info name='neutral' value={neutral} />
-      <Info name='bad' value={bad} />
-      <Info name='all' value={total} />
-      <Info name='average' value={average} />
-      <Info name='positive' value={`${positive} %`} />
+      <StatisticLine name='good' value={good} />
+      <StatisticLine name='neutral' value={neutral} />
+      <StatisticLine name='bad' value={bad} />
+      <StatisticLine name='all' value={total} />
+      <StatisticLine name='average' value={average} />
+      <StatisticLine name='positive' value={`${positive} %`} />
     </>
   )
 }
