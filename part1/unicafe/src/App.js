@@ -22,6 +22,8 @@ const App = () => {
         <Button name='bad' onClick={handleBad} />
       </div>
 
+      <Header title='statistics' />
+
       <Statistics good={good} neutral={neutral} bad={bad} />
     </>
   )
