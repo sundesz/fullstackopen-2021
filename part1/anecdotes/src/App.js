@@ -1,4 +1,8 @@
 import React, { useState } from 'react'
+import Anecdote from './components/Anecdote'
+import Button from './components/Button'
+import Header from './components/Header'
+import MostVotedAnecdotes from './components/MostVotedAnecdotes'
 
 const App = () => {
   const anecdotes = [
@@ -29,13 +33,15 @@ const App = () => {
 
   return (
     <div>
-      <div>{anecdotes[selected]}</div>
-      <div>{`has ${votes[selected] || 0} votes`}</div>
+      <Header title='Anecdote of the day' />
+      <Anecdote votes={votes} anecdotes={anecdotes} selected={selected} />
 
       <div>
-        <button onClick={castVote}>vote</button>
-        <button onClick={generateRandomAnecdote}>next anecdotes</button>
+        <Button onClick={castVote} name='vote' />
+        <Button onClick={generateRandomAnecdote} name='next anecdotes' />
       </div>
+
+      <MostVotedAnecdotes votes={votes} anecdotes={anecdotes} />
     </div>
   )
 }
