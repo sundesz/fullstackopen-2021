@@ -4,10 +4,19 @@ const App = () => {
   const [persons, setPersons] = useState([{ name: 'Arto Hellas' }])
   const [newName, setNewName] = useState('')
 
+  const checkName = () => {
+    return persons.map((p) => p.name).includes(newName)
+  }
+
   const submitHandler = (e) => {
     e.preventDefault()
-    const newObj = { name: newName }
 
+    if (checkName()) {
+      alert(`${newName} is already added to phonebook`)
+      return
+    }
+
+    const newObj = { name: newName }
     setPersons(() => [...persons, newObj])
     setNewName(() => '')
   }
