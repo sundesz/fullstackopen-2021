@@ -21,6 +21,7 @@ const App = () => {
         )
 
   const handleSearch = (e) => setSearchText(() => e.target.value)
+  const handleShow = (country) => () => setSearchText(() => country)
 
   return (
     <div>
@@ -29,8 +30,15 @@ const App = () => {
       {filteredCountries.length === 1 && (
         <Country country={filteredCountries[0]} />
       )}
+
       {filteredCountries.length < 10 &&
-        filteredCountries.map((c) => <div key={c.cca2}>{c.name.common}</div>)}
+        filteredCountries.map((c) => (
+          <div key={c.cca2}>
+            {c.name.common}{' '}
+            <button onClick={handleShow(c.name.common)}>show</button>
+          </div>
+        ))}
+
       {searchText && filteredCountries.length > 10 && (
         <div>Too many matches, specify another filter</div>
       )}
