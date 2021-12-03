@@ -19,7 +19,7 @@ const App = () => {
     e.preventDefault()
 
     if (checkDuplicateName()) {
-      alert(`${newName} is already added to phonebook`)
+      window.alert(`${newName} is already added to phonebook`)
       return
     }
 
@@ -40,6 +40,18 @@ const App = () => {
   const nameHandler = (e) => setNewName(() => e.target.value)
   const numberHandler = (e) => setNewNumber(() => e.target.value)
   const searchHandler = (e) => setSearchText(() => e.target.value)
+  const deleteHandler = (id) => () => {
+    const confirmDelete = window.confirm(
+      `Delete ${persons.find((p) => p.id === id)?.name} ?`
+    )
+
+    if (confirmDelete) {
+      phoneService
+        .remove(id)
+        .then(() => setPersons(() => persons.filter((p) => p.id !== id)))
+        .catch((error) => console.log('Person already deleted'))
+    }
+  }
 
   const filteredPersons =
     searchText === ''
@@ -63,7 +75,7 @@ const App = () => {
       />
 
       <Header title='Numbers' headerTag='h3' />
-      <Persons persons={filteredPersons} />
+      <Persons persons={filteredPersons} deleteHandler={deleteHandler} />
     </div>
   )
 }
