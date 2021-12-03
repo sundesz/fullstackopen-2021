@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+import phoneService from './services/phone'
 import Filter from './components/Filter'
 import Header from './components/Header'
 import PersonForm from './components/PersonForm'
@@ -12,9 +12,7 @@ const App = () => {
   const [persons, setPersons] = useState([])
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then((response) => setPersons(() => response.data))
+    phoneService.getAll().then((persons) => setPersons(() => persons))
   }, [])
 
   const submitHandler = (e) => {
@@ -25,8 +23,15 @@ const App = () => {
       return
     }
 
-    const newObj = { name: newName, number: newNumber, id: persons.length + 1 }
-    setPersons(() => [...persons, newObj])
+    const newPerson = {
+      name: newName,
+      number: newNumber,
+    }
+
+    phoneService
+      .create(newPerson)
+      .then((createdPerson) => setPersons(() => [...persons, createdPerson]))
+
     setNewName(() => '')
     setNewNumber(() => '')
   }
