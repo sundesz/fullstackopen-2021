@@ -4,12 +4,16 @@ import Filter from './components/Filter'
 import Header from './components/Header'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import './app.css'
+import Notification from './components/Notification'
 
 const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [searchText, setSearchText] = useState('')
   const [persons, setPersons] = useState([])
+  const [message, setMessage] = useState('')
+  const [messageType, setMessageType] = useState('')
 
   useEffect(() => {
     phoneService.getAll().then((persons) => setPersons(() => persons))
@@ -23,6 +27,12 @@ const App = () => {
       number: newNumber,
     }
 
+    if (newName.trim() === '' || newNumber.trim() === '') {
+      setNotification('Add both name and number', 'error')
+      clearForm()
+      return
+    }
+
     if (checkDuplicateName()) {
       updatePhoneBook(checkDuplicateName().id, newPerson)
       return
@@ -30,7 +40,13 @@ const App = () => {
 
     phoneService
       .create(newPerson)
-      .then((createdPerson) => setPersons(() => [...persons, createdPerson]))
+      .then((createdPerson) => {
+        setPersons(() => [...persons, createdPerson])
+        setNotification(`Added ${createdPerson.name}`, 'success')
+      })
+      .catch((error) => {
+        setNotification('Error while adding new name', 'error')
+      })
 
     clearForm()
   }
@@ -46,15 +62,25 @@ const App = () => {
   }
 
   const deleteHandler = (id) => () => {
-    const confirmDelete = window.confirm(
-      `Delete ${persons.find((p) => p.id === id)?.name} ?`
-    )
+    const name = persons.find((p) => p.id === id)?.name
+    const confirmDelete = window.confirm(`Delete ${name} ?`)
 
     if (confirmDelete) {
       phoneService
         .remove(id)
-        .then(() => setPersons(() => persons.filter((p) => p.id !== id)))
-        .catch((error) => console.log('Person already deleted'))
+        .then(() => {
+          setPersons(() => persons.filter((p) => p.id !== id))
+          setNotification(`Deleted ${name}`, 'success')
+        })
+        .catch((error) => {
+          setNotification(
+            `Information of ${name} has already been removed from server`,
+            'error'
+          )
+          console.log(
+            `Information of ${name} has already been removed from server`
+          )
+        })
     }
   }
 
@@ -66,11 +92,25 @@ const App = () => {
     if (confirmUpdate) {
       phoneService
         .update(id, updateObj)
-        .then((updatedPhone) =>
+        .then((updatedPhone) => {
           setPersons(() => persons.map((p) => (p.id === id ? updatedPhone : p)))
-        )
+          setNotification(`Updated ${updatedPhone.name}`, 'success')
+        })
+        .catch((error) => {
+          setNotification(`Error while updating`, 'error')
+        })
       clearForm()
     }
+  }
+
+  const setNotification = (notification, notificationType) => {
+    setMessage(() => notification)
+    setMessageType(() => notificationType)
+
+    setTimeout(() => {
+      setMessage(() => '')
+      setMessageType(() => '')
+    }, 10000)
   }
 
   const filteredPersons =
@@ -82,10 +122,12 @@ const App = () => {
 
   return (
     <div>
-      <Header title='Phonebook' headerTag='h2' />
+      <Header title='Phonebook' displayType='h2' />
+      <Notification message={message} messageType={messageType} />
+
       <Filter searchText={searchText} searchHandler={searchHandler} />
 
-      <Header title='Add a new' headerTag='h3' />
+      <Header title='Add a new' displayType='h3' />
       <PersonForm
         onSubmit={submitHandler}
         newName={newName}
@@ -94,7 +136,7 @@ const App = () => {
         numberHandler={numberHandler}
       />
 
-      <Header title='Numbers' headerTag='h3' />
+      <Header title='Numbers' displayType='h3' />
       <Persons persons={filteredPersons} deleteHandler={deleteHandler} />
     </div>
   )

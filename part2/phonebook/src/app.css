@@ -1,0 +1,41 @@
+.h1 {
+  font-size: 30px;
+}
+
+.h2 {
+  font-size: 25px;
+}
+
+.h3 {
+  font-size: 20px;
+}
+
+.h4 {
+  font-size: 15px;
+}
+
+.h1,
+.h2,
+.h3,
+.h4 {
+  font-weight: bold;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+}
+
+.notification {
+  background: #d3d3d3;
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.success {
+  color: #058b00;
+}
+
+.error {
+  color: #f00;
+}
