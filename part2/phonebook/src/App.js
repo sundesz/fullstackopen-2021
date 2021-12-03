@@ -18,28 +18,33 @@ const App = () => {
   const submitHandler = (e) => {
     e.preventDefault()
 
-    if (checkDuplicateName()) {
-      window.alert(`${newName} is already added to phonebook`)
-      return
-    }
-
     const newPerson = {
       name: newName,
       number: newNumber,
+    }
+
+    if (checkDuplicateName()) {
+      updatePhoneBook(checkDuplicateName().id, newPerson)
+      return
     }
 
     phoneService
       .create(newPerson)
       .then((createdPerson) => setPersons(() => [...persons, createdPerson]))
 
+    clearForm()
+  }
+
+  const checkDuplicateName = () =>
+    persons.find((p) => p.name.toLowerCase() === newName.toLowerCase())
+  const nameHandler = (e) => setNewName(() => e.target.value)
+  const numberHandler = (e) => setNewNumber(() => e.target.value)
+  const searchHandler = (e) => setSearchText(() => e.target.value)
+  const clearForm = () => {
     setNewName(() => '')
     setNewNumber(() => '')
   }
 
-  const checkDuplicateName = () => persons.map((p) => p.name).includes(newName)
-  const nameHandler = (e) => setNewName(() => e.target.value)
-  const numberHandler = (e) => setNewNumber(() => e.target.value)
-  const searchHandler = (e) => setSearchText(() => e.target.value)
   const deleteHandler = (id) => () => {
     const confirmDelete = window.confirm(
       `Delete ${persons.find((p) => p.id === id)?.name} ?`
@@ -50,6 +55,21 @@ const App = () => {
         .remove(id)
         .then(() => setPersons(() => persons.filter((p) => p.id !== id)))
         .catch((error) => console.log('Person already deleted'))
+    }
+  }
+
+  const updatePhoneBook = (id, updateObj) => {
+    const confirmUpdate = window.confirm(
+      `${newName} is already added to phonebook, replace the old number with a new one?`
+    )
+
+    if (confirmUpdate) {
+      phoneService
+        .update(id, updateObj)
+        .then((updatedPhone) =>
+          setPersons(() => persons.map((p) => (p.id === id ? updatedPhone : p)))
+        )
+      clearForm()
     }
   }
 
@@ -65,7 +85,7 @@ const App = () => {
       <Header title='Phonebook' headerTag='h2' />
       <Filter searchText={searchText} searchHandler={searchHandler} />
 
-      <Header title='Add person' headerTag='h3' />
+      <Header title='Add a new' headerTag='h3' />
       <PersonForm
         onSubmit={submitHandler}
         newName={newName}
