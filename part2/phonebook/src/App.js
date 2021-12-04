@@ -43,12 +43,11 @@ const App = () => {
       .then((createdPerson) => {
         setPersons(() => [...persons, createdPerson])
         setNotification(`Added ${createdPerson.name}`, 'success')
+        clearForm()
       })
       .catch((error) => {
-        setNotification('Error while adding new name', 'error')
+        setNotification(error.response.data.error, 'error')
       })
-
-    clearForm()
   }
 
   const checkDuplicateName = () =>
@@ -77,9 +76,6 @@ const App = () => {
             `Information of ${name} has already been removed from server`,
             'error'
           )
-          console.log(
-            `Information of ${name} has already been removed from server`
-          )
         })
     }
   }
@@ -95,11 +91,11 @@ const App = () => {
         .then((updatedPhone) => {
           setPersons(() => persons.map((p) => (p.id === id ? updatedPhone : p)))
           setNotification(`Updated ${updatedPhone.name}`, 'success')
+          clearForm()
         })
         .catch((error) => {
-          setNotification(`Error while updating`, 'error')
+          setNotification(error.response.data.error, 'error')
         })
-      clearForm()
     }
   }
 
