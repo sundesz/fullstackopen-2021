@@ -1,0 +1,15 @@
+GET http://localhost:3003
+
+###
+GET http://localhost:3003/api/blogs
+
+###
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+  "title": "Sandesh First post",
+  "author": "Sandesh Hyoju",
+  "url": "http://sandesh.hyoju.com",
+  "likes": 10
+}
