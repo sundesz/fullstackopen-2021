@@ -13,3 +13,16 @@ Content-Type: application/json
   "url": "http://sandesh.hyoju.com",
   "likes": 10
 }
+
+
+###
+PUT http://localhost:3003/api/blogs/61ae69019774b29ca9bc27a8
+Content-Type: application/json
+
+  {
+    "likes": 5
+  }
+
+
+###
+DELETE http://localhost:3003/api/blogs/61ae69019774b29ca9bc27a8
