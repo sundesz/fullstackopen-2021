@@ -3,6 +3,10 @@ const unknownEndpoint = (req, res) => {
 }
 
 const errorHandler = (err, req, res, next) => {
+  switch (err.name) {
+    case 'ValidationError':
+      return res.status(400).json({ error: err.message })
+  }
   next(err)
 }
 
