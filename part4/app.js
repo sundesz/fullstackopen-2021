@@ -7,25 +7,33 @@ const logger = require('./utils/logger')
 const config = require('./utils/config')
 const middleware = require('./utils/middleware')
 const blogsRouter = require('./controllers/blog')
+const usersRouter = require('./controllers/user')
+const loginRouter = require('./controllers/login')
 
 app.use(cors())
 app.use(express.json())
 logger.info('Connecting to mongodb url', config.MONGODB_URI)
 
-mongoose
-  .connect(config.MONGODB_URI)
-  .then(() => {
+const connectMongoose = async () => {
+  try {
+    await mongoose.connect(config.MONGODB_URI)
     logger.info('Connected to mongodb')
-  })
-  .catch((err) => {
+  } catch (err) {
     logger.error('Error connecting to mongodb: ', err.message)
-  })
+  }
+}
+
+connectMongoose()
 
 app.get('/', (req, res) => {
   res.send('<h1>Sandesh Hyoju - Bloglist</h1>')
 })
 
-app.use('/api/blogs', blogsRouter)
+app.use(middleware.tokenExtractor)
+
+app.use('/api/blogs', middleware.userExtractor, blogsRouter)
+app.use('/api/users', usersRouter)
+app.use('/api/login', loginRouter)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)

@@ -7,7 +7,13 @@ const MONGODB_URI =
 
 const PORT = process.env.PORT
 
+const SALT = process.env.SALT
+
+const SECRET = process.env.SECRET
+
 module.exports = {
   MONGODB_URI,
   PORT,
+  SALT,
+  SECRET,
 }

@@ -1,8 +1,9 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 blogsRouter.get('/', async (req, res) => {
-  const blogs = await Blog.find({})
+  const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
   res.json(blogs)
 })
 
@@ -16,31 +17,57 @@ blogsRouter.get('/:id', async (req, res) => {
 })
 
 blogsRouter.post('/', async (req, res) => {
-  const body = req.body.like ? req.body : { ...req.body, likes: 0 }
+  const loggedInUser = req.user
 
-  const blog = new Blog(body)
+  if (!loggedInUser) {
+    return res.status(401).json({ error: 'invalid or missing token' })
+  }
+
+  const user = await User.findById(loggedInUser.id)
+
+  if (!user) {
+    res.status(401).json({ error: 'User not found' })
+  }
+
+  const body = req.body
+  const blog = new Blog({
+    title: body.title,
+    author: body.author,
+    url: body.url,
+    likes: body.likes || 0,
+    user: user._id,
+  })
   const savedBlog = await blog.save()
+
+  user.blogs = [...user.blogs, savedBlog._id]
+  await user.save()
 
   res.status(201).json(savedBlog)
 })
 
 blogsRouter.delete('/:id', async (req, res) => {
-  const blog = await Blog.findByIdAndDelete(req.params.id)
-  if (blog) {
+  const loggedInUser = req.user
+  if (!loggedInUser) {
+    return res.status(401).json({ error: 'invalid or missing token' })
+  }
+
+  const blog = await Blog.findById(req.params.id)
+
+  if (!blog) {
+    return res.status(401).json({ error: 'blog not found' })
+  }
+
+  if (!blog.user || blog.user.toString() === loggedInUser.id) {
+    await Blog.findByIdAndDelete(req.params.id)
     return res.status(204).end()
   }
 
-  res.status(404).json({ error: 'Id not found' })
+  res.status(401).json({ error: 'blog can be deleted only by its author' })
 })
 
-blogsRouter.put('/:id', async (req, res) => {
-  const updatedBlog = await Blog.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-    context: 'query',
-  })
-
-  res.json(updatedBlog)
+blogsRouter.delete('/', async (req, res) => {
+  await Blog.deleteMany()
+  res.status(204).end()
 })
 
 blogsRouter.put('/:id', async (req, res) => {
