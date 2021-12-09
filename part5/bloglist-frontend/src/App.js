@@ -7,8 +7,6 @@ import './App.css'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState(null)
   const [messageType, setMessageType] = useState(null)
@@ -57,14 +55,7 @@ const App = () => {
     return (
       <>
         <Notification message={message} messageType={messageType} />
-        <Login
-          username={username}
-          password={password}
-          setUsername={setUsername}
-          setPassword={setPassword}
-          setUser={setUser}
-          setNotification={setNotification}
-        />
+        <Login setUser={setUser} setNotification={setNotification} />
       </>
     )
   }
@@ -80,7 +71,6 @@ const App = () => {
         blogs={blogs}
         setBlogs={setBlogs}
         user={user}
-        logoutHandler={logoutHandler}
         setNotification={setNotification}
       />
     </div>

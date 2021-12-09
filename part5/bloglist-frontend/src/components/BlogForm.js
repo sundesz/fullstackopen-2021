@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 import blogService from '../services/blogs'
 
-const BlogForm = ({ blogs, setBlogs, setNotification }) => {
+const BlogForm = ({ blogs, setBlogs, togglableRef, afterRESTOperation }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -19,13 +20,17 @@ const BlogForm = ({ blogs, setBlogs, setNotification }) => {
     }
 
     const savedBlog = await blogService.create(newBlog)
-    if (savedBlog) {
+
+    const callback = () => {
       setBlogs(() => [...blogs, savedBlog])
-      setNotification(
-        `A new blog "${savedBlog.title}" by ${savedBlog.author} added`,
-        'success'
-      )
+      togglableRef.current.toggleVisibility()
     }
+
+    afterRESTOperation(
+      savedBlog,
+      `A new blog "${savedBlog.title}" by ${savedBlog.author} added`,
+      callback
+    )
   }
 
   return (
@@ -59,6 +64,13 @@ const BlogForm = ({ blogs, setBlogs, setNotification }) => {
       </form>
     </div>
   )
+}
+
+BlogForm.propTypes = {
+  blogs: PropTypes.array.isRequired,
+  setBlogs: PropTypes.func.isRequired,
+  togglableRef: PropTypes.object.isRequired,
+  afterRESTOperation: PropTypes.func.isRequired,
 }
 
 export default BlogForm

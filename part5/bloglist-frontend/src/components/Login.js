@@ -1,14 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 import loginService from '../services/login'
 
-const Login = ({
-  username,
-  password,
-  setUsername,
-  setPassword,
-  setUser,
-  setNotification,
-}) => {
+const Login = ({ setUser, setNotification }) => {
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+
   const submitHandler = async (e) => {
     e.preventDefault()
 
@@ -19,8 +16,6 @@ const Login = ({
       setUser(() => loginInfo)
       window.localStorage.setItem('userinfo', JSON.stringify(loginInfo))
 
-      setUsername(() => '')
-      setPassword(() => '')
       setNotification(`${loginInfo.username} logged in`, 'success')
     }
   }
@@ -52,6 +47,11 @@ const Login = ({
       </form>
     </div>
   )
+}
+
+Login.propTypes = {
+  setUser: PropTypes.func.isRequired,
+  setNotification: PropTypes.func.isRequired,
 }
 
 export default Login

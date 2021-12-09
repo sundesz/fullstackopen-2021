@@ -13,3 +13,10 @@
 .error {
   color: #e73629;
 }
+
+.blog-container {
+  padding: 10px;
+  font-size: 20px;
+  border: 2px solid;
+  margin: 10px 0;
+}

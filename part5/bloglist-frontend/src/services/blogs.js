@@ -27,6 +27,24 @@ const create = async (newObject) => {
   return response.data
 }
 
-const exportObject = { getAll, create }
+const update = async (id, object) => {
+  try {
+    const response = await axios.put(`${baseUrl}/${id}`, object)
+    return response.data
+  } catch (err) {
+    return err.response.data
+  }
+}
+
+const remove = async (id) => {
+  try {
+    const response = await axios.delete(`${baseUrl}/${id}`, headerRequest())
+    return response.data
+  } catch (err) {
+    return err.response.data
+  }
+}
+
+const exportObject = { getAll, create, update, remove }
 
 export default exportObject
