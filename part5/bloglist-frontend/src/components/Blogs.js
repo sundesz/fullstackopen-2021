@@ -38,6 +38,26 @@ const Blogs = ({ blogs, setBlogs, user, setNotification }) => {
     }
   }
 
+  const createHandler = async (newBlog) => {
+    const savedBlog = await blogService.create(newBlog)
+
+    const callback = () => {
+      setBlogs(() => [
+        ...blogs,
+        { ...savedBlog, user: { username: user.username } },
+      ])
+
+      // only run toggleVisibility() when togglableRef.current is not null
+      togglableRef.current && togglableRef.current.toggleVisibility()
+    }
+
+    afterRESTOperation(
+      savedBlog,
+      `A new blog "${savedBlog.title}" by ${savedBlog.author} added`,
+      callback
+    )
+  }
+
   const afterRESTOperation = (object, successMessage, callback) => {
     if (object.error) {
       setNotification(object.error, 'error')
@@ -52,12 +72,7 @@ const Blogs = ({ blogs, setBlogs, user, setNotification }) => {
   return (
     <div>
       <Togglable buttonLabel='Create new blog' ref={togglableRef}>
-        <BlogForm
-          blogs={blogs}
-          setBlogs={setBlogs}
-          togglableRef={togglableRef}
-          afterRESTOperation={afterRESTOperation}
-        />
+        <BlogForm createHandler={createHandler} />
       </Togglable>
 
       <br />

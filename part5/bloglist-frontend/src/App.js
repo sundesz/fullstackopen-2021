@@ -23,6 +23,7 @@ const App = () => {
   }, [])
 
   const logoutHandler = () => {
+    console.log('logged out')
     setNotification(`${user.username} logged out`, 'success')
     setUser(() => null)
     window.localStorage.removeItem('userinfo')
@@ -35,7 +36,9 @@ const App = () => {
       <div>
         <p>
           {user.name} logged in &nbsp;
-          <button onClick={logoutHandler}>logout</button>
+          <button id='logout' onClick={logoutHandler}>
+            Logout
+          </button>
         </p>
       </div>
     )
@@ -48,7 +51,7 @@ const App = () => {
     setTimeout(() => {
       setMessage(() => null)
       setMessageType(() => null)
-    }, 5000)
+    }, 10000)
   }
 
   if (user === null) {

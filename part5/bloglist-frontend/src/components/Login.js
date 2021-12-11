@@ -27,6 +27,7 @@ const Login = ({ setUser, setNotification }) => {
         <div>
           <input
             type='text'
+            id='username'
             name='username'
             placeholder='Username'
             value={username}
@@ -36,6 +37,7 @@ const Login = ({ setUser, setNotification }) => {
         <div>
           <input
             type='password'
+            id='password'
             name='password'
             placeholder='Password'
             value={password}
@@ -43,7 +45,7 @@ const Login = ({ setUser, setNotification }) => {
           />
         </div>
 
-        <button>Login</button>
+        <button id='login-button'>Login</button>
       </form>
     </div>
   )

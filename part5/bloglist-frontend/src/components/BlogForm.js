@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import blogService from '../services/blogs'
 
-const BlogForm = ({ blogs, setBlogs, togglableRef, afterRESTOperation }) => {
+const BlogForm = ({ createHandler }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -18,29 +17,22 @@ const BlogForm = ({ blogs, setBlogs, togglableRef, afterRESTOperation }) => {
       author,
       url,
     }
+    createHandler(newBlog)
 
-    const savedBlog = await blogService.create(newBlog)
-
-    const callback = () => {
-      setBlogs(() => [...blogs, savedBlog])
-      togglableRef.current.toggleVisibility()
-    }
-
-    afterRESTOperation(
-      savedBlog,
-      `A new blog "${savedBlog.title}" by ${savedBlog.author} added`,
-      callback
-    )
+    setTitle(() => '')
+    setAuthor(() => '')
+    setUrl(() => '')
   }
 
   return (
     <div>
       <h1>Create a new blog</h1>
 
-      <form onSubmit={submitHandler}>
+      <form id='blogForm' onSubmit={submitHandler}>
         <div>
           Title:
           <input
+            id='title'
             type='text'
             name='title'
             value={title}
@@ -50,6 +42,7 @@ const BlogForm = ({ blogs, setBlogs, togglableRef, afterRESTOperation }) => {
         <div>
           Author:
           <input
+            id='author'
             type='text'
             name='author'
             value={author}
@@ -58,19 +51,22 @@ const BlogForm = ({ blogs, setBlogs, togglableRef, afterRESTOperation }) => {
         </div>
         <div>
           Url:
-          <input type='text' name='url' value={url} onChange={urlHandler} />
+          <input
+            id='url'
+            type='text'
+            name='url'
+            value={url}
+            onChange={urlHandler}
+          />
         </div>
-        <button>Create</button>
+        <button id='create-blog'>Create</button>
       </form>
     </div>
   )
 }
 
 BlogForm.propTypes = {
-  blogs: PropTypes.array.isRequired,
-  setBlogs: PropTypes.func.isRequired,
-  togglableRef: PropTypes.object.isRequired,
-  afterRESTOperation: PropTypes.func.isRequired,
+  createHandler: PropTypes.func.isRequired,
 }
 
 export default BlogForm

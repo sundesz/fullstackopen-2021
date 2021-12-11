@@ -12,24 +12,30 @@ const Blog = ({ user, blog, likeHandler, deleteHandler }) => {
 
   return (
     <div className='blog-container'>
-      <div style={hideWhenVisible}>
+      <div className='short-description' style={hideWhenVisible}>
         {blog.title} {blog.author} &nbsp;
-        <button onClick={toggleView}>View</button>
+        <button className='view' onClick={toggleView}>
+          View
+        </button>
       </div>
-      <div style={showWhenVisible}>
+      <div className='long-description' style={showWhenVisible}>
         <div>
           {blog.title} &nbsp; <button onClick={toggleView}>Hide</button>
         </div>
         <div>{blog.url}</div>
         <div>
           likes {blog.likes} &nbsp;
-          <button onClick={likeHandler(blog)}>Like</button>
+          <button className='like' onClick={likeHandler(blog)}>
+            Like
+          </button>
         </div>
         <div>{blog.author}</div>
 
         <br />
-        {user.username === blog.user.username && (
-          <button onClick={deleteHandler(blog)}>Delete</button>
+        {blog.user && user.username === blog.user.username && (
+          <button className='delete' onClick={deleteHandler(blog)}>
+            Delete
+          </button>
         )}
       </div>
     </div>
