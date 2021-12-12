@@ -1,12 +1,14 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { castVote } from '../reducers/anecdoteReducer'
+import { displayNotification } from '../reducers/notificationReducer'
 
 const Anecdote = ({ anecdote }) => {
   const dispatch = useDispatch()
 
   const vote = (id) => {
     dispatch(castVote(id))
+    displayNotification(dispatch, `Vote anecdote`)
   }
 
   return (

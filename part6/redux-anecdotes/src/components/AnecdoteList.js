@@ -3,15 +3,18 @@ import { useSelector } from 'react-redux'
 import Anecdote from './Anecdote'
 
 const AnecdoteList = () => {
-  const anecdotes = useSelector((state) => state)
+  const appState = useSelector((state) => state)
 
   const orderByVotes = (anecdote1, anecdote2) =>
     anecdote2.votes - anecdote1.votes
 
+  const anecdotes =
+    appState.filter === ''
+      ? appState.anecdotes
+      : appState.anecdotes.filter((a) => a.content.includes(appState.filter))
+
   return (
     <div>
-      <h2>Anecdotes</h2>
-
       {anecdotes.sort(orderByVotes).map((anecdote) => (
         <Anecdote key={anecdote.id} anecdote={anecdote} />
       ))}
