@@ -1,18 +1,13 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Anecdote from './Anecdote'
-import anecdoteService from '../services/anecdotes'
 import { initializeAnecdotes } from '../reducers/anecdoteReducer'
 
 const AnecdoteList = () => {
   const appState = useSelector((state) => state)
   const dispatch = useDispatch()
   useEffect(() => {
-    const fetch = async () => {
-      const anecdote = await anecdoteService.getAll()
-      dispatch(initializeAnecdotes(anecdote))
-    }
-    fetch()
+    dispatch(initializeAnecdotes())
   }, [dispatch])
 
   const orderByVotes = (anecdote1, anecdote2) =>

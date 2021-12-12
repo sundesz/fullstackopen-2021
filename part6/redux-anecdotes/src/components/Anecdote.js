@@ -6,9 +6,14 @@ import { displayNotification } from '../reducers/notificationReducer'
 const Anecdote = ({ anecdote }) => {
   const dispatch = useDispatch()
 
-  const vote = (id) => {
-    dispatch(castVote(id))
-    displayNotification(dispatch, `Vote anecdote`)
+  const vote = async (anecdote) => {
+    dispatch(
+      castVote(anecdote.id, {
+        content: anecdote.content,
+        votes: Number(anecdote.votes) + 1,
+      })
+    )
+    dispatch(displayNotification(`You voted "${anecdote.content}"`, 10))
   }
 
   return (
@@ -16,7 +21,7 @@ const Anecdote = ({ anecdote }) => {
       <div>{anecdote.content}</div>
       <div>
         has {anecdote.votes}
-        <button onClick={() => vote(anecdote.id)}>vote</button>
+        <button onClick={() => vote(anecdote)}>vote</button>
       </div>
     </div>
   )

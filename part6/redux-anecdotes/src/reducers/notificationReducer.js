@@ -1,4 +1,5 @@
 const initialState = ''
+let timeoutID
 
 const notificationReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -20,12 +21,19 @@ export const clearNotification = () => ({
   type: 'RESET_NOTIFICATION',
 })
 
-export const displayNotification = (dispatch, message) => {
-  dispatch(setNotification(message))
+export const displayNotification = (message, second = 5) => {
+  return async (dispatch) => {
+    dispatch(setNotification(message))
+    clearTimeout(timeoutID)
 
-  setTimeout(() => {
-    dispatch(clearNotification())
-  }, 5000)
+    await new Promise((resolve) => {
+      timeoutID = setTimeout(
+        () => resolve(dispatch(clearNotification())),
+        second * 1000
+      )
+      return timeoutID
+    })
+  }
 }
 
 export default notificationReducer
