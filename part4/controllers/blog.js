@@ -1,9 +1,12 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const Comment = require('../models/comment')
 
 blogsRouter.get('/', async (req, res) => {
-  const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
+  const blogs = await Blog.find({})
+    .populate('user', { username: 1, name: 1 })
+    .populate('comments', { comment: 1 })
   res.json(blogs)
 })
 
@@ -45,6 +48,39 @@ blogsRouter.post('/', async (req, res) => {
   res.status(201).json(savedBlog)
 })
 
+blogsRouter.post('/:id/comments', async (req, res) => {
+  const loggedInUser = req.user
+
+  if (!loggedInUser) {
+    return res.status(401).json({ error: 'invalid or missing token' })
+  }
+
+  const user = await User.findById(loggedInUser.id)
+
+  if (!user) {
+    res.status(401).json({ error: 'User not found' })
+  }
+
+  const body = req.body
+  const blog = await Blog.findById(req.params.id)
+
+  if (!blog) {
+    res.status(401).json({ error: 'Blog not found' })
+  }
+
+  const comment = new Comment({
+    comment: body.comment,
+    blog: blog._id,
+    user: user._id,
+  })
+
+  const savedComment = await comment.save()
+  blog.comments = [...blog.comments, savedComment._id]
+  await blog.save()
+
+  res.json(savedComment)
+})
+
 blogsRouter.delete('/:id', async (req, res) => {
   const loggedInUser = req.user
   if (!loggedInUser) {
@@ -58,7 +94,8 @@ blogsRouter.delete('/:id', async (req, res) => {
   }
 
   if (!blog.user || blog.user.toString() === loggedInUser.id) {
-    await Blog.findByIdAndDelete(req.params.id)
+    await Blog.findByIdAndDelete(blog.id)
+    await Comment.deleteMany({ blog: blog.id })
     return res.status(204).end()
   }
 
@@ -67,6 +104,7 @@ blogsRouter.delete('/:id', async (req, res) => {
 
 blogsRouter.delete('/', async (req, res) => {
   await Blog.deleteMany()
+  await Comment.deleteMany()
   res.status(204).end()
 })
 

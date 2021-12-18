@@ -1,7 +1,7 @@
 GET http://localhost:3003
 
 ###
-GET http://localhost:3003/api/blogs/61afdbdb91fd858672a2c2a0
+GET http://localhost:3003/api/blogs
 
 ###
 POST http://localhost:3003/api/blogs
@@ -54,4 +54,13 @@ Content-Type: application/json
 {
   "username": "sandesh",
   "password":"sandesh"
+}
+
+###
+POST http://localhost:3003/api/blogs/61afdb1fff30b65a26a1e3f1/comments
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNhbmRlc2giLCJpZCI6IjYxYWZkYjBiZmYzMGI2NWEyNmExZTNlYiIsImlhdCI6MTYzOTY5MzYxNX0.HG45u78KjcqUu-1ug9OSaFwfPqkijToIDBhz5c0GWpc
+Content-Type: application/json
+
+{
+  "comment": "still testing comment"
 }
