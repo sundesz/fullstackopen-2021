@@ -1,0 +1,25 @@
+.navigation {
+  background: red;
+  padding: 10px 0;
+  margin-bottom: 20px;
+}
+
+.navigation li {
+  list-style: none;
+  display: inline;
+  padding: 10px;
+}
+
+.navigation li a {
+  color: yellow;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.notification {
+  border: 2px solid lightgray;
+  padding: 20px;
+  font-size: 20px;
+  font-weight: bold;
+  border-radius: 5px;
+}
