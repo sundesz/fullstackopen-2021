@@ -1,34 +1,79 @@
 import { useQuery } from '@apollo/client'
-import React from 'react'
-import { ALL_BOOKS } from '../queries'
+import React, { useEffect } from 'react'
+import Table from 'react-bootstrap/Table'
+import ButtonGroup from 'react-bootstrap/ButtonGroup'
+import Button from 'react-bootstrap/Button'
+import Alert from 'react-bootstrap/Alert'
+import { ALL_GENRES } from '../queries'
 
-const Books = () => {
-  const books = useQuery(ALL_BOOKS)
+const Books = ({ filter, setFilter, getBooks, bookResult }) => {
+  const genres = useQuery(ALL_GENRES)
 
-  if (books.loading) {
+  useEffect(() => {
+    getBooks({ variables: { genre: filter } })
+  }, [getBooks, filter])
+
+  if (bookResult.loading || genres.loading) {
     return <div>Loading ...</div>
   }
 
+  if (bookResult.error) {
+    console.error(bookResult.error)
+    return <div>Error loading books</div>
+  }
+
+  if (genres.error) {
+    console.error(genres.error)
+    return <div>Error loading genres</div>
+  }
+
+  const genresHandler = (genre) => () => {
+    setFilter((value) => (genre === 'all genres' ? '' : genre))
+  }
+
+  const allGenres = [...genres.data.allGenres, 'all genres']
+  const allBooks = bookResult.data?.allBooks
+
   return (
     <div>
-      <h2>books</h2>
+      <h3>Books</h3>
 
-      <table>
-        <tbody>
+      <Alert variant='secondary'>
+        In genre: <b>{filter === '' ? 'all genres' : filter}</b>
+      </Alert>
+
+      <Table striped hover>
+        <thead>
           <tr>
-            <th></th>
-            <th>author</th>
-            <th>published</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Published</th>
           </tr>
-          {books.data.allBooks.map((a) => (
-            <tr key={a.title}>
-              <td>{a.title}</td>
-              <td>{a.author}</td>
-              <td>{a.published}</td>
+        </thead>
+        <tbody>
+          {allBooks?.map((book) => (
+            <tr key={book.title}>
+              <td>{book.title}</td>
+              <td>{book.author.name}</td>
+              <td>{book.published}</td>
             </tr>
           ))}
         </tbody>
-      </table>
+      </Table>
+
+      <br />
+
+      <ButtonGroup>
+        {allGenres.map((genre) => (
+          <Button
+            variant='secondary'
+            key={genre}
+            onClick={genresHandler(genre)}
+          >
+            {genre}
+          </Button>
+        ))}
+      </ButtonGroup>
     </div>
   )
 }

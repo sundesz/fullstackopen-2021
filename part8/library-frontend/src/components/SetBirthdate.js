@@ -2,8 +2,9 @@ import { useMutation } from '@apollo/client'
 import React, { useState } from 'react'
 import useField from '../hooks'
 import { ALL_AUTHORS, EDIT_AUTHOR } from '../queries'
-
 import Select from 'react-select'
+import Form from 'react-bootstrap/Form'
+import Button from 'react-bootstrap/Button'
 
 const SetBirthdate = ({ authors, displayNotification }) => {
   const [selectedOption, setSelectedOption] = useState(null)
@@ -19,18 +20,22 @@ const SetBirthdate = ({ authors, displayNotification }) => {
     label: author.name,
   }))
 
-  const submit = async (event) => {
+  const birthDateSubmitHandler = async (event) => {
     event.preventDefault()
     if (selectedOption === null) {
-      displayNotification('Please select author first')
+      displayNotification('Please select author first', 'danger')
       return
     }
 
-    editAuthor({
-      variables: { name: selectedOption.value, born: Number(dob.value) },
-    }).catch((err) => console.log(err))
-
-    dob.reset()
+    try {
+      await editAuthor({
+        variables: { name: selectedOption.value, born: Number(dob.value) },
+      })
+      displayNotification('Author updated successfully')
+      dob.reset()
+    } catch (err) {
+      displayNotification(err.message, 'danger')
+    }
   }
 
   const inputAttributes = (object) => ({
@@ -42,24 +47,27 @@ const SetBirthdate = ({ authors, displayNotification }) => {
 
   return (
     <div>
-      <h2>Set birth year</h2>
-      <form onSubmit={submit}>
-        <div>
-          Name
+      <h3>Set birth year</h3>
+
+      <Form onSubmit={birthDateSubmitHandler}>
+        <Form.Group className='mb-3'>
+          <Form.Label>Select Author</Form.Label>
           <Select
             defaultValue={selectedOption}
             onChange={setSelectedOption}
             options={options}
           />
-        </div>
+        </Form.Group>
 
-        <div>
-          Born
-          <input {...inputAttributes(dob)} />
-        </div>
+        <Form.Group className='mb-3' controlId='born'>
+          <Form.Label>Birth year</Form.Label>
+          <Form.Control {...inputAttributes(dob)} />
+        </Form.Group>
 
-        <button type='submit'>Update author</button>
-      </form>
+        <Button variant='primary' type='submit'>
+          Update author
+        </Button>
+      </Form>
     </div>
   )
 }

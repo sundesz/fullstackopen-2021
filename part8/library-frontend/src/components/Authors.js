@@ -1,25 +1,34 @@
 import { useQuery } from '@apollo/client'
 import React from 'react'
+import Table from 'react-bootstrap/Table'
 import { ALL_AUTHORS } from '../queries'
 import SetBirthdate from './SetBirthdate'
 
-const Authors = ({ displayNotification }) => {
+const Authors = ({ token, displayNotification }) => {
   const authors = useQuery(ALL_AUTHORS)
 
   if (authors.loading) {
     return <div>Loading...</div>
   }
 
+  if (authors.error) {
+    console.error(authors.error)
+    return <div>{authors.error}</div>
+  }
+
   return (
     <div>
-      <h2>authors</h2>
-      <table>
-        <tbody>
+      <h3>Authors</h3>
+
+      <Table striped hover>
+        <thead>
           <tr>
-            <th></th>
-            <th>born</th>
-            <th>books</th>
+            <th>Name</th>
+            <th>Birthyear</th>
+            <th>Books</th>
           </tr>
+        </thead>
+        <tbody>
           {authors.data.allAuthors.map((a) => (
             <tr key={a.name}>
               <td>{a.name}</td>
@@ -28,14 +37,16 @@ const Authors = ({ displayNotification }) => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </Table>
 
       <br />
 
-      <SetBirthdate
-        authors={authors.data.allAuthors}
-        displayNotification={displayNotification}
-      />
+      {token && (
+        <SetBirthdate
+          authors={authors.data.allAuthors}
+          displayNotification={displayNotification}
+        />
+      )}
     </div>
   )
 }

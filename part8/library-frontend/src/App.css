@@ -10,6 +10,17 @@
   padding: 10px;
 }
 
+.navigation li button {
+  color: yellow;
+  font-weight: bold;
+  text-decoration: none;
+  border: none;
+  background-color: transparent;
+  font-size: inherit;
+  font-style: inherit;
+  cursor: pointer;
+  padding: 0;
+}
 .navigation li a {
   color: yellow;
   font-weight: bold;
@@ -22,4 +33,5 @@
   font-size: 20px;
   font-weight: bold;
   border-radius: 5px;
+  margin-bottom: 20px;
 }
