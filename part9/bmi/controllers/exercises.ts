@@ -3,22 +3,22 @@ import { calculateExercises } from '../exerciseCalculator';
 import { ExerciseArgumentsInterface } from '../interface/exercises';
 
 const parseExercisesArguments = (req: Request): ExerciseArgumentsInterface => {
-  const { target, exerciseHour } = req.query as {
+  const { target, daily_exercises } = req.body as {
     target: unknown;
-    exerciseHour: unknown[];
+    daily_exercises: unknown[];
   };
 
-  if (!target || !exerciseHour) {
+  if (!target || !daily_exercises) {
     throw new Error('parameters missing');
   }
 
-  if (isNaN(Number(target)) || exerciseHour.filter(isNaN).length) {
+  if (isNaN(Number(target)) || daily_exercises.filter(isNaN).length) {
     throw new Error('malformatted parameters');
   }
 
   return {
     target: Number(target),
-    exerciseHour: exerciseHour.map(Number),
+    exerciseHour: daily_exercises.map(Number),
   };
 };
 

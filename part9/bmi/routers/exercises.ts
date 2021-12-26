@@ -3,6 +3,6 @@ import exerciseCalculator from '../controllers/exercises';
 
 const exerciseRouter = express.Router();
 
-exerciseRouter.get('/', exerciseCalculator.exerciseCalculator);
+exerciseRouter.post('/', exerciseCalculator.exerciseCalculator);
 
 export default exerciseRouter;
