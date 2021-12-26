@@ -1,39 +1,25 @@
-interface ExerciseArgumentsInterface {
-  target: number;
-  exerciseHour: number[];
-}
-
-interface CalculateExercisesInterface {
-  periodLength: number;
-  trainingDays: number;
-  success: boolean;
-  rating: number;
-  ratingDescription: string;
-  target: number;
-  average: number;
-}
-
-interface RatingDescriptionInterface {
-  rating: number;
-  ratingDescription: string;
-}
+import {
+  CalculateExercisesInterface,
+  ExerciseArgumentsInterface,
+  RatingDescriptionInterface,
+} from './interface/exercises';
 
 const processArgumentsForExercise = (
   args: string[]
 ): ExerciseArgumentsInterface => {
   if (args.length < 4) throw new Error('Not enough arguments');
-  const dailyExercisesHour = args.splice(3, args.length);
+  const [, , target, ...dailyExercisesHour] = args;
 
   if (
-    isNaN(Number(args[2])) ||
+    isNaN(Number(target)) ||
     dailyExercisesHour.filter((hour) => isNaN(Number(hour))).length
   ) {
     throw new Error('Provided arguments should be a numbers!');
   }
 
   return {
-    target: Number(args[2]),
-    exerciseHour: dailyExercisesHour.map((hour) => Number(hour)),
+    target: Number(target),
+    exerciseHour: dailyExercisesHour.map(Number),
   };
 };
 
@@ -52,14 +38,13 @@ const getRatingAndDescription = (hours: number): RatingDescriptionInterface => {
   }
 };
 
-const calculateExercises = (
+export const calculateExercises = (
   target: number,
   exerciseHour: number[]
 ): CalculateExercisesInterface => {
   const periodLength = exerciseHour.length;
   const expectedHour = periodLength * target;
   const actualHour = exerciseHour.reduce((sum, value) => sum + value, 0);
-
   const { rating, ratingDescription } = getRatingAndDescription(
     actualHour / expectedHour
   );

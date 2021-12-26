@@ -1,5 +1,6 @@
 import express from 'express';
-import { calculateBmi, processWebBMIArguments } from './bmiCalculator';
+import bmiRouter from './routers/bmi';
+import exerciseRouter from './routers/exercises';
 
 const app = express();
 
@@ -11,22 +12,8 @@ app.get('/hello', (_req, res) => {
   res.send('<h1>Hello Full Stack!</h1>');
 });
 
-app.get('/bmi', (req, res) => {
-  try {
-    const { height, weight } = processWebBMIArguments(
-      req.query.height as string,
-      req.query.weight as string
-    );
-
-    res.json({
-      weight,
-      height,
-      bmi: calculateBmi(height, weight),
-    });
-  } catch (err) {
-    res.json({ error: err.message });
-  }
-});
+app.use('/bmi', bmiRouter);
+app.use('/exercises', exerciseRouter);
 
 const PORT = process.env.PORT || 3002;
 

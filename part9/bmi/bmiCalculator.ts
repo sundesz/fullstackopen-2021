@@ -1,7 +1,4 @@
-interface BmiInterface {
-  height: number;
-  weight: number;
-}
+import { BmiInterface } from './interface/bmi';
 
 const processArgumentsForBMI = (args: string[]): BmiInterface => {
   if (args.length < 4) throw new Error('Not enough arguments');
@@ -43,7 +40,7 @@ export const calculateBmi = (height: number, weight: number): string => {
     case bmi >= 25 && bmi <= 29.9:
       return 'Overweight';
     case bmi >= 30 && bmi <= 34.9:
-      return 'Obese (Class I)	';
+      return 'Obese (Class I)';
     case bmi >= 35 && bmi <= 39.9:
       return 'Obese (Class II)';
     case bmi >= 40:
