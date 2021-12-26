@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { RequestHandler } from 'express';
 import bmiRouter from './routers/bmi';
 import exerciseRouter from './routers/exercises';
 
@@ -16,6 +16,11 @@ app.get('/hello', (_req, res) => {
 
 app.use('/bmi', bmiRouter);
 app.use('/exercises', exerciseRouter);
+
+const unknownEndpoint: RequestHandler = (_req, res) => {
+  res.status(404).send({ error: 'Unknown endpoint' });
+};
+app.use(unknownEndpoint);
 
 const PORT = process.env.PORT || 3002;
 

@@ -1,7 +1,7 @@
-import express from 'express';
+import { Router } from 'express';
 import exerciseCalculator from '../controllers/exercises';
 
-const exerciseRouter = express.Router();
+const exerciseRouter = Router();
 
 exerciseRouter.post('/', exerciseCalculator.exerciseCalculator);
 
