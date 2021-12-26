@@ -11,14 +11,25 @@ const processArgumentsForBMI = (args: string[]): BmiInterface => {
     throw new Error('Provided arguments should be a numbers!');
   }
 
+  return processWebBMIArguments(args[2], args[3]);
+};
+
+export const processWebBMIArguments = (
+  height: string,
+  weight: string
+): BmiInterface => {
+  if (isNaN(Number(height)) || isNaN(Number(weight))) {
+    throw new Error('malformatted parameters');
+  }
+
   return {
-    height: Number(args[2]),
-    weight: Number(args[3]),
+    height: Number(height),
+    weight: Number(weight),
   };
 };
 
-const calculateBmi = (height: number, weight: number): string => {
-  const bmi = weight / Math.pow(height / 100, 2);
+export const calculateBmi = (height: number, weight: number): string => {
+  const bmi = Number((weight / Math.pow(height / 100, 2)).toFixed(1));
 
   switch (true) {
     case bmi < 16:
@@ -36,6 +47,7 @@ const calculateBmi = (height: number, weight: number): string => {
     case bmi >= 35 && bmi <= 39.9:
       return 'Obese (Class II)';
     case bmi >= 40:
+    default:
       return 'Obese (Class III)';
   }
 };

@@ -47,6 +47,7 @@ const getRatingAndDescription = (hours: number): RatingDescriptionInterface => {
         ratingDescription: 'not too bad but could be better',
       };
     case hours < 0.5:
+    default:
       return { rating: 1, ratingDescription: 'bad' };
   }
 };
