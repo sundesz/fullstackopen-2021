@@ -1,6 +1,7 @@
 import { IPatient } from '../types';
+import toNewWebPatient from '../utils';
 
-const patientData: IPatient[] = [
+const data = [
   {
     id: 'd2773336-f723-11e9-8f0b-362b9e155667',
     name: 'John McClane',
@@ -42,5 +43,11 @@ const patientData: IPatient[] = [
     occupation: 'Digital evangelist',
   },
 ];
+
+const patientData: IPatient[] = data.map((d) => {
+  const pData = toNewWebPatient(d) as IPatient;
+  pData.id = d.id;
+  return pData;
+});
 
 export default patientData;
