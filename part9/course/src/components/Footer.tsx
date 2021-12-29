@@ -1,16 +1,21 @@
 import React from 'react'
-import { ICourse } from '../types'
+import { ICoursePart } from '../types'
 
 interface FooterProps {
-  courseParts: ICourse[]
+  courseParts: ICoursePart[]
 }
 
 const Footer = (props: FooterProps): JSX.Element => {
   return (
-    <p>
-      Number of exercises{' '}
-      {props.courseParts.reduce((carry, part) => carry + part.exerciseCount, 0)}
-    </p>
+    <>
+      <p>
+        Number of exercises{' '}
+        {props.courseParts.reduce(
+          (carry, part) => carry + part.exerciseCount,
+          0
+        )}
+      </p>
+    </>
   )
 }
 

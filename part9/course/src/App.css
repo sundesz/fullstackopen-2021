@@ -1,0 +1,12 @@
+.description {
+  font-style: italic;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.course {
+  margin: 15px 0;
+}
