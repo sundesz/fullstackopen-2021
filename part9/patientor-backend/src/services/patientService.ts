@@ -9,7 +9,12 @@ const getAll = (): IWebPatient[] => {
     dateOfBirth: patient.dateOfBirth,
     gender: patient.gender,
     occupation: patient.occupation,
+    entries: patient.entries,
   }));
+};
+
+const getOne = (id: string): IPatient | undefined => {
+  return patientData.find((patient) => patient.id === id);
 };
 
 const create = (patient: INewWebPatient): IPatient => {
@@ -18,6 +23,7 @@ const create = (patient: INewWebPatient): IPatient => {
   const p = {
     id,
     ...patient,
+    entries: patient.entries ?? [],
   };
 
   patientData.push(p);
@@ -26,6 +32,7 @@ const create = (patient: INewWebPatient): IPatient => {
 };
 
 export default {
+  getOne,
   getAll,
   create,
 };

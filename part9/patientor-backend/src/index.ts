@@ -1,6 +1,6 @@
 import express, { Request, RequestHandler, Response } from 'express';
 import cors from 'cors';
-import diagnosisRouter from './routers/diagnoses';
+import diagnosisRouter from './routers/diagnosis';
 import patientRouter from './routers/patients';
 
 const app = express();
@@ -17,7 +17,7 @@ app.get('/api/ping', (_req: Request, res: Response) => {
   res.send('pong');
 });
 
-app.use('/api/diagnoses', diagnosisRouter);
+app.use('/api/diagnosis', diagnosisRouter);
 app.use('/api/patients', patientRouter);
 
 const unknownEndpoint: RequestHandler = (_req, res) => {
