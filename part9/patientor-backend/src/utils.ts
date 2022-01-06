@@ -41,22 +41,12 @@ const isHealthCheckRating = (rating: unknown): rating is HealthCheckRating => {
 
 const isDischarge = (discharge: unknown): discharge is IEntryDischarge => {
   const d = discharge as IEntryDischarge;
-  return (
-    d.date !== undefined &&
-    d.criteria !== undefined &&
-    isDate(d.date) &&
-    isString(d.criteria)
-  );
+  return d.date !== undefined && d.criteria !== undefined;
 };
 
 const isSickLeave = (sickLeave: unknown): sickLeave is IEntrySickLeave => {
   const s = sickLeave as IEntrySickLeave;
-  return (
-    s.startDate !== undefined &&
-    s.endDate !== undefined &&
-    isDate(s.startDate) &&
-    isDate(s.endDate)
-  );
+  return s.startDate !== undefined && s.endDate !== undefined;
 };
 
 const parseSickLeave = (sickLeave: unknown): IEntrySickLeave => {
@@ -65,8 +55,8 @@ const parseSickLeave = (sickLeave: unknown): IEntrySickLeave => {
   }
 
   return {
-    startDate: parseDate(sickLeave.startDate),
-    endDate: parseDate(sickLeave.endDate),
+    startDate: sickLeave.startDate.length ? parseDate(sickLeave.startDate) : '',
+    endDate: sickLeave.endDate.length ? parseDate(sickLeave.endDate) : '',
   };
 };
 
@@ -76,8 +66,10 @@ const parseDischarge = (discharge: unknown): IEntryDischarge => {
   }
 
   return {
-    date: parseDate(discharge.date),
-    criteria: parseString(discharge.criteria, 'Discharge criteria'),
+    date: discharge.date.length ? parseDate(discharge.date) : '',
+    criteria: discharge.criteria.length
+      ? parseString(discharge.criteria, 'Discharge criteria')
+      : '',
   };
 };
 

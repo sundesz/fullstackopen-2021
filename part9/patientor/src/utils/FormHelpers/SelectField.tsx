@@ -19,40 +19,40 @@ export type HealthCheckRatingOption = {
   label: string;
 };
 
-// props for select field component
-type SelectFieldProps = {
+interface GenericSelectProps<T> {
   name: string;
   label: string;
-  options: GenderOption[];
-};
-
-export const SelectField = ({ name, label, options }: SelectFieldProps) => (
-  <Form.Field>
-    <label>{label}</label>
-    <Field as="select" name={name} className="ui dropdown">
-      {options.map((option) => (
-        <option key={option.value} value={option.value}>
-          {option.label || option.value}
-        </option>
-      ))}
-    </Field>
-  </Form.Field>
-);
-
-// props for select field component
-type SelectHealthCheckRatingProps = {
-  name: string;
-  label: string;
-  options: HealthCheckRatingOption[];
+  options: T[];
   fieldDisplay?: { display: string };
-};
+}
 
-export const SelectHealthCheckRatingField = ({
+// TODO: Make generic select
+// export const GenericSelect = <T extends unknown>({
+//   name,
+//   label,
+//   options,
+//   fieldDisplay,
+// }: GenericSelectProps<T>): JSX.Element => {
+//   return (
+//     <Form.Field style={fieldDisplay}>
+//       <label>{label}</label>
+//       <Field as="select" name={name} className="ui dropdown">
+//         {options.map((option) => (
+//           <option key={option.value} value={option.value}>
+//             {option.label || option.value}
+//           </option>
+//         ))}
+//       </Field>
+//     </Form.Field>
+//   );
+// };
+
+export const SelectField = ({
   name,
   label,
   options,
   fieldDisplay,
-}: SelectHealthCheckRatingProps) => (
+}: GenericSelectProps<GenderOption>) => (
   <Form.Field style={fieldDisplay}>
     <label>{label}</label>
     <Field as="select" name={name} className="ui dropdown">
@@ -65,18 +65,29 @@ export const SelectHealthCheckRatingField = ({
   </Form.Field>
 );
 
-// props for select field component
-type SelectEntryTypeProps = {
-  name: string;
-  label: string;
-  options: EntryTypeOption[];
-};
+export const SelectHealthCheckRatingField = ({
+  name,
+  label,
+  options,
+  fieldDisplay,
+}: GenericSelectProps<HealthCheckRatingOption>) => (
+  <Form.Field style={fieldDisplay}>
+    <label>{label}</label>
+    <Field as="select" name={name} className="ui dropdown">
+      {options.map((option) => (
+        <option key={option.value} value={option.value}>
+          {option.label || option.value}
+        </option>
+      ))}
+    </Field>
+  </Form.Field>
+);
 
 export const SelectEntryField = ({
   name,
   label,
   options,
-}: SelectEntryTypeProps) => (
+}: GenericSelectProps<EntryTypeOption>) => (
   <Form.Field>
     <label>{label}</label>
     <Field as="select" name={name} className="ui dropdown">
