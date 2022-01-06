@@ -4,10 +4,10 @@ import { useParams } from 'react-router-dom';
 import { Container, Header, Icon } from 'semantic-ui-react';
 import { apiBaseUrl } from '../constants';
 import { setPatientData, useStateValue } from '../state';
-import { GenderIcon, Patient } from '../types';
+import { GenderIcon, IPatient } from '../types';
 import Entry from '../Entry';
 
-const renderGenderIcon = (patient: Patient | null): JSX.Element => {
+const renderGenderIcon = (patient: IPatient | null): JSX.Element => {
   if (!patient) {
     return <></>;
   }
@@ -21,7 +21,7 @@ const PatientDetail = (): JSX.Element => {
   React.useEffect(() => {
     const fetchPatientDetail = async () => {
       try {
-        const { data: patientInfoFromApi } = await axios.get<Patient>(
+        const { data: patientInfoFromApi } = await axios.get<IPatient>(
           `${apiBaseUrl}/patients/${patientId}`
         );
         dispatch(setPatientData(patientInfoFromApi));
@@ -41,6 +41,7 @@ const PatientDetail = (): JSX.Element => {
   if (!patientId) {
     return <>Patient not found</>;
   }
+
   return (
     <Container textAlign="justified">
       <Header as="h2">
@@ -48,12 +49,12 @@ const PatientDetail = (): JSX.Element => {
       </Header>
 
       <div>
-        <div>ssn: {patient?.ssn}</div>
-        <div>occupation: {patient?.occupation}</div>
+        <div>SSN: {patient?.ssn}</div>
+        <div>Occupation: {patient?.occupation}</div>
       </div>
 
       <br />
-      <Entry entries={patient?.entries} />
+      <Entry entries={patient?.entries} patientId={patientId} />
     </Container>
   );
 };

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Modal, Segment } from 'semantic-ui-react';
-import AddPatientForm, { PatientFormValues } from './AddPatientForm';
+import { PatientFormValues } from '../types';
+import AddPatientForm from './AddPatientForm';
 
 interface Props {
   modalOpen: boolean;

@@ -2,9 +2,8 @@ import React from 'react';
 import axios from 'axios';
 import { Container, Table, Button } from 'semantic-ui-react';
 
-import { PatientFormValues } from '../AddPatientModal/AddPatientForm';
 import AddPatientModal from '../AddPatientModal';
-import { Patient } from '../types';
+import { IPatient, PatientFormValues } from '../types';
 import { apiBaseUrl } from '../constants';
 import HealthRatingBar from '../components/HealthRatingBar';
 import { createPatient, useStateValue } from '../state';
@@ -12,7 +11,6 @@ import { Link } from 'react-router-dom';
 
 const PatientListPage = () => {
   const [{ patients }, dispatch] = useStateValue();
-
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
 
@@ -25,17 +23,20 @@ const PatientListPage = () => {
 
   const submitNewPatient = async (values: PatientFormValues) => {
     try {
-      const { data: newPatient } = await axios.post<Patient>(
+      const { data: newPatient } = await axios.post<IPatient>(
         `${apiBaseUrl}/patients`,
         values
       );
       dispatch(createPatient(newPatient));
       closeModal();
-    } catch (e: unknown) {
-      // console.error(e?.response?.data || 'Unknown Error');
-      // setError(e?.response?.data?.error || 'Unknown error');
-      console.error('Unknown Error');
-      setError('Unknown error');
+    } catch (error: unknown) {
+      let errorMessage = 'Something went wrong.';
+      if (axios.isAxiosError(error) && error.response) {
+        // console.error(error.response.data);
+        errorMessage = error.response.data as string;
+      }
+
+      setError(errorMessage);
     }
   };
 
@@ -54,7 +55,7 @@ const PatientListPage = () => {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {Object.values(patients).map((patient: Patient) => (
+          {Object.values(patients).map((patient: IPatient) => (
             <Table.Row key={patient.id}>
               <Table.Cell>
                 <Link to={`/patients/${patient.id}`}>{patient.name}</Link>

@@ -14,11 +14,11 @@ export interface IDiagnosis {
   latin?: string;
 }
 
-enum HealthCheckRating {
-  'Healthy' = 0,
-  'LowRisk' = 1,
-  'HighRisk' = 2,
-  'CriticalRisk' = 3,
+export enum HealthCheckRating {
+  Healthy = 0,
+  LowRisk = 1,
+  HighRisk = 2,
+  CriticalRisk = 3,
 }
 export interface IPatient {
   id: string;
@@ -30,9 +30,9 @@ export interface IPatient {
   entries?: Entry[];
 }
 
-export type IWebPatient = Omit<IPatient, 'ssn' | 'entries'>;
+export type WebPatient = Omit<IPatient, 'ssn' | 'entries'>;
 
-export type INewWebPatient = Omit<IPatient, 'id'>;
+export type NewWebPatient = Omit<IPatient, 'id'>;
 
 export type PatientField = {
   name: unknown;
@@ -43,6 +43,18 @@ export type PatientField = {
   entries?: unknown;
 };
 
+export interface EntryField {
+  type: unknown;
+  date: unknown;
+  specialist: unknown;
+  description: unknown;
+  diagnosisCodes?: unknown[];
+  healthCheckRating?: unknown;
+  employerName?: unknown;
+  sickLeave?: unknown;
+  discharge?: unknown;
+}
+
 interface IBaseEntry {
   id: string;
   date: string;
@@ -51,21 +63,25 @@ interface IBaseEntry {
   diagnosisCodes?: Array<IDiagnosis['code']>;
 }
 
-interface IHospitalEntry extends IBaseEntry {
+export interface IEntryDischarge {
+  date: string;
+  criteria: string;
+}
+
+export interface IEntrySickLeave {
+  startDate: string;
+  endDate: string;
+}
+
+export interface IHospitalEntry extends IBaseEntry {
   type: EntryType.Hospital;
-  discharge: {
-    date: string;
-    criteria: string;
-  };
+  discharge?: IEntryDischarge;
 }
 
 interface IOccupationalHealthcareEntry extends IBaseEntry {
   type: EntryType.OccupationalHealthcare;
   employerName: string;
-  sickLeave?: {
-    startDate: string;
-    endDate: string;
-  };
+  sickLeave?: IEntrySickLeave;
 }
 
 interface IHealthCheckEntry extends IBaseEntry {
@@ -83,4 +99,6 @@ type UnionOmit<T, K extends string | number | symbol> = T extends unknown
   ? Omit<T, K>
   : never;
 // Define Entry without the 'id' property
-export type EntryWithoutId = UnionOmit<Entry, 'id'>;
+export type NewEntry = UnionOmit<Entry, 'id'>;
+
+export type NewEntryBase = Omit<IBaseEntry, 'id'>;
